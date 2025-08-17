@@ -37,7 +37,7 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cancellations ENABLE ROW LEVEL SECURITY;
 
--- Basic RLS policies (candidates should enhance these)
+-- Enhanced RLS policies for production security
 CREATE POLICY "Users can view own data" ON users
   FOR SELECT USING (auth.uid() = id);
 
@@ -52,6 +52,24 @@ CREATE POLICY "Users can insert own cancellations" ON cancellations
 
 CREATE POLICY "Users can view own cancellations" ON cancellations
   FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own cancellations" ON cancellations
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- Additional security constraints
+ALTER TABLE cancellations ADD CONSTRAINT valid_downsell_variant 
+  CHECK (downsell_variant IN ('A', 'B'));
+
+ALTER TABLE subscriptions ADD CONSTRAINT valid_status 
+  CHECK (status IN ('active', 'pending_cancellation', 'cancelled'));
+
+ALTER TABLE cancellations ADD CONSTRAINT valid_reason_length 
+  CHECK (LENGTH(reason) <= 500);
+
+-- Index for performance
+CREATE INDEX IF NOT EXISTS idx_cancellations_user_id ON cancellations(user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_cancellations_variant ON cancellations(downsell_variant);
 
 -- Seed data
 INSERT INTO users (id, email) VALUES

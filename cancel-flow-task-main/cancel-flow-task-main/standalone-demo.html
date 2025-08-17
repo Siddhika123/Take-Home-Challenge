@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrate Mate - Cancel Subscription</title>
+    <style>
+        /* Embedded CSS for standalone demo */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .card-content {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1, h2 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #15803d;
+        }
+        
+        .form-option {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-option:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .offer-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .offer-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #16a34a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-old {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        
+        .price-new {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .feature-list {
+            list-style: none;
+            text-align: left;
+            margin: 1rem 0;
+        }
+        
+        .feature-list li {
+            padding: 0.25rem 0;
+            color: #6b7280;
+        }
+        
+        .feature-list li::before {
+            content: "•";
+            color: #dc2626;
+            margin-right: 0.5rem;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #16a34a;
+        }
+        
+        .profile-image {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Step 1: Initial -->
+            <div id="step-initial" class="card-content">
+                <img src="empire-state-compressed.jpg" alt="Empire State Building" class="hero-image">
+                <h1>We're sorry to see you go!</h1>
+                <p>Before you cancel, help us understand why you're leaving so we can improve.</p>
+                <button class="btn btn-danger" onclick="startCancellation()">Continue with Cancellation</button>
+                <a href="/" class="btn btn-secondary">Never mind, go back</a>
+            </div>
+            
+            <!-- Step 2: Reasons -->
+            <div id="step-reasons" class="card-content hidden">
+                <h2>What's your main reason for canceling?</h2>
+                <div id="reasons-list">
+                    <button class="form-option" onclick="selectReason('Too expensive')">Too expensive</button>
+                    <button class="form-option" onclick="selectReason('Not using it enough')">Not using it enough</button>
+                    <button class="form-option" onclick="selectReason('Found a better alternative')">Found a better alternative</button>
+                    <button class="form-option" onclick="selectReason('Technical issues')">Technical issues</button>
+                    <button class="form-option" onclick="selectReason('Poor customer service')">Poor customer service</button>
+                    <button class="form-option" onclick="selectReason('Other')">Other</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Downsell (Variant B only) -->
+            <div id="step-downsell" class="card-content hidden">
+                <h2>Wait! We have a special offer for you</h2>
+                <div class="offer-card">
+                    <div class="offer-title">$10 OFF</div>
+                    <div class="price-old">$25.00/month</div>
+                    <div class="price-new">$15.00/month</div>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                        This special pricing is available for the next 6 months
+                    </p>
+                </div>
+                <button class="btn btn-success" onclick="acceptDownsell()">Accept this offer</button>
+                <button class="btn btn-secondary" onclick="declineDownsell()">No thanks, continue canceling</button>
+            </div>
+            
+            <!-- Step 4: Confirmation -->
+            <div id="step-confirm" class="card-content hidden">
+                <img src="mihailo-profile.jpeg" alt="Profile" class="profile-image">
+                <h2>Are you sure, Mihailo?</h2>
+                <p>Your subscription will be canceled and you'll lose access to:</p>
+                <ul class="feature-list">
+                    <li>Premium migration tools</li>
+                    <li>Priority customer support</li>
+                    <li>Advanced analytics</li>
+                    <li>Unlimited transfers</li>
+                </ul>
+                <div class="warning-box">
+                    <strong>Reason:</strong> <span id="selected-reason"></span>
+                </div>
+                <button class="btn btn-danger" onclick="finalCancel()">Yes, cancel my subscription</button>
+                <a href="/" class="btn btn-secondary">Keep my subscription</a>
+            </div>
+            
+            <!-- Step 5: Complete -->
+            <div id="step-complete" class="card-content hidden">
+                <div class="success-icon">✓</div>
+                <h2>Subscription Canceled</h2>
+                <p>Your subscription has been marked for cancellation. You'll continue to have access until the end of your current billing period.</p>
+                <a href="/" class="btn btn-success">Return to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // A/B Testing and Flow Logic
+        let currentStep = 'initial';
+        let variant = null;
+        let selectedReason = '';
+        let userData = {
+            id: '550e8400-e29b-41d4-a716-446655440001',
+            name: 'Mihailo',
+            subscription: {
+                monthly_price: 2500 // $25.00 in cents
+            }
+        };
+
+        // Initialize A/B variant (deterministic)
+        function initializeVariant() {
+            // Check localStorage for existing variant
+            let storedVariant = localStorage.getItem('downsell_variant');
+            if (storedVariant) {
+                variant = storedVariant;
+                return;
+            }
+            
+            // Generate new variant using secure random
+            const array = new Uint8Array(1);
+            crypto.getRandomValues(array);
+            variant = array[0] % 2 === 0 ? 'A' : 'B';
+            
+            // Store for future visits
+            localStorage.setItem('downsell_variant', variant);
+            
+            console.log('A/B Variant assigned:', variant);
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('[id^="step-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show current step
+            document.getElementById('step-' + step).classList.remove('hidden');
+            currentStep = step;
+        }
+
+        function startCancellation() {
+            initializeVariant();
+            showStep('reasons');
+        }
+
+        function selectReason(reason) {
+            selectedReason = reason;
+            document.getElementById('selected-reason').textContent = reason;
+            
+            // Route based on A/B variant
+            if (variant === 'B') {
+                showStep('downsell');
+            } else {
+                showStep('confirm');
+            }
+        }
+
+        function acceptDownsell() {
+            // In real implementation, this would process payment update
+            console.log('Downsell accepted - redirecting to profile');
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Great! Your new pricing has been applied. Redirecting to your profile...');
+                window.location.href = '/';
+            }, 1000);
+        }
+
+        function declineDownsell() {
+            showStep('confirm');
+        }
+
+        function finalCancel() {
+            // Simulate API call
+            console.log('Processing final cancellation...', {
+                userId: userData.id,
+                variant: variant,
+                reason: selectedReason,
+                acceptedDownsell: false
+            });
+            
+            setTimeout(() => {
+                showStep('complete');
+            }, 1000);
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Cancellation flow initialized');
+            showStep('initial');
+        });
+    </script>
+</body>
+</html>
